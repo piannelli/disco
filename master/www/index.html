@@ -1,69 +1,152 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-          "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <title>disco status</title>
-    <link rel="stylesheet" href="/css/reset-fonts-grids.css" type="text/css">
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <meta charset="utf-8">
+    <title>Bootstrap, from Twitter</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-    <script type="text/javascript" src="/js/jquery-1.2.1.js"></script>
-    <script type="text/javascript" src="/js/jquery-dom.js"></script>
-    <script type="text/javascript" src="/js/typewatch1.1.js"></script>
+    <!-- Le styles -->
+    <link href="/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="/css/disco.css" rel="stylesheet">
+    
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
 
-    <script type="text/javascript" src="/js/joblist.js"></script>
-    <script type="text/javascript" src="/js/disco.js"></script>
-    <script type="text/javascript" src="/js/status.js"></script>
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/bootstrap/ico/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/bootstrap/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/bootstrap/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/bootstrap/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="/bootstrap/ico/apple-touch-icon-57-precomposed.png">
   </head>
+
   <body>
-    <div id="doc3" class="yui-t5">
-      <div id="hd">
-        <div id="title">disco status</div>
-        <div id="logo">
-          <img src="/images/balls.png"/>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="#">Disco Project</a>
+          <div class="nav-collapse collapse">
+            <p class="navbar-text pull-right">
+              <small>version <a href="#" class="navbar-link"><span id="version">0.4.3-2</span></a>
+            </p>
+            <ul class="nav">
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="#about">Jobs</a></li>
+              <li><a href="#contact">DDFS</a></li>
+              <li><a href="#contact">Hosts</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
         </div>
-      </div>
-
-      <div id="bd">
-        <div id="yui-main">
-          <div class="yui-b">
-            <div id="nodes" class="yui-g">
-              <!-- nodeboxes -->
-	    </div>
-          </div>
-        </div>
-
-        <div class="yui-b">
-          <div class="links">
-            <a href="index.html">status</a> |
-            <a href="config.html">configure</a>
-          </div>
-
-          <div id="joblist">
-            <input type="text" length="50" />
-            <div id="jobs">
-              <!-- jobs -->
-            </div>
-          </div>
-
-	  <div id="gcinfo">
-	    <h3>Last DDFS GC run</h3>
-	    <div id="gcstats">
-	      <!-- gcstats -->
-	    </div>
-	    <div id="gcstatus">
-	      <!-- gc status -->
-	    </div>
-	    <div id="gclog">
-	      &nbsp;<span id="gclog-msg"></span>
-	      <!-- gc msg -->
-	    </div>
-	  </div>
-        </div>
-      </div>
-
-      <div id="ft">
-        Disco <span id="version"></span>
       </div>
     </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="span9">
+          <div class="hero-unit" id="disco_status">
+            <h1>Disco Status</h1>
+            <p>This is a complete overview of your current Disco setup.</p>
+            <div class="row">
+            	<p></p>
+            </div>
+			<div class="row">
+				<div class="span2">
+					<p>Hosts</p>
+				</div>
+				<div class="offset1">
+					<p><span id="hosts_active_count"></span> of <span id="hosts_total_count"></span> (Active/Total)</p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span2">
+					<p>Workers</p>
+				</div>
+				<div class="offset1">
+					<p><span id="workers_active_count"></span> of <span id="workers_total_count"></span> (Active/Total)</p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span2">
+					<p>Disk Space</p>
+				</div>
+				<div class="offset0">
+					<div class="progress">
+  						<div class="bar bar-warning" style="width: 10%;"><span id="disk_used_percentage"></span>%</div>
+  						<div class="bar bar-success" style="width: 90%;"><span id="disk_free_percentage"></span>%</div>
+		  			</div>
+		  		</div>
+	  		</div>
+			<div class="row">
+				<div class="pull-right">
+					<p><small><span id="disk_used_count"></span> used / <span id="disk_free_count"></span> free</small></p>
+				</div>
+			</div>
+			<div class="row" style="display:none">
+				<div class="">
+					<div class="alert alert-error">
+						<span id="failed_node_message">You have <span id="failed_node_count">1</span> failed node !
+					</div>
+				</div>
+			</div>
+          </div>
+
+		  <div class="row" id="nodes"></div>
+		</div>
+        <div class="span3" >
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list running-jobs">
+              <li class="nav-header">Running jobs</li>
+        	</ul>
+          </div>
+        </div>
+        <div class="span3">
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list failed-jobs">
+              <li class="nav-header">Failed jobs</li>
+        	</ul>
+          </div>
+        </div>
+        <div class="span3">
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list completed-jobs">
+              <li class="nav-header">Completed jobs</li>
+        	</ul>
+          </div>
+        </div>
+          </div><!--/.well -->
+        </div><!--/span-->
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+        <p class="pull-right">Follow this project at <a href="http://www.discoproject.org">http://www.discoproject.org</a> or on <a href="https://github.com/discoproject">GitHub</a></p>
+      </footer>
+
+    </div><!--/.container-->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/bootstrap/js/jquery.js"></script>
+    <script src="/bootstrap/js/bootstrap.js"></script>
+    <script type="text/javascript" src="/js/jquery-dom.js"></script>
+    <script type="text/javascript" src="/js/typewatch1.1.js"></script>
+    <script src="/js/disco.js"></script>
+    <script src="/js/status.js"></script>
+    <script src="/js/joblist.js"></script>
+
+
   </body>
 </html>

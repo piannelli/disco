@@ -1,0 +1,94 @@
+body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+        
+}
+.sidebar-nav {
+    padding: 9px 0;
+}
+
+#disco_status {
+	padding-top:30px;
+	height: 290px;
+}
+
+#visualization {
+	width: 380px;
+	height: 150px;
+}
+
+.progress {
+	margin-top: 5px;
+}
+
+.red a,
+.red a:hover {
+    background-color: red;
+    color: white;
+}
+
+footer p {
+	margin-right: 20px;
+}
+.host {
+	width: 110px;
+	min-height: 140px !important;
+}
+.disconnected {
+	color: #bd2b2b;
+}
+.disconnected .label {
+	background-color: #bd2b2b;
+}
+
+.completed-jobs, .running-jobs, .failed-jobs {
+	max-height: 163px !important;
+	overflow: auto;
+}
+.completed-jobs a, .running-jobs a, .failed-jobs a {
+	color: #666;
+}
+.completed-jobs .nav-header {
+	color: green;
+}
+
+.running-jobs .nav-header {
+	color: #a5a533;
+}
+
+.failed-jobs .nav-header {
+	color: #a53333;
+}
+
+.host div.label {
+	width: 3px;
+	height: 15px;
+	display: inline-block;
+	margin: 0px 2px 2px 0;
+	float: left;
+}
+
+.host li.divider {
+	clear: both;
+}
+
+.host .nav-list {
+	padding: 0;
+	margin: 6px;
+}
+
+.host .workers {
+	margin-left: 4px;
+}
+
+.host h5 {
+	margin-left: 4px;
+}
+
+.blacklisted-disco {
+	margin-right: 5px;
+}
+
+.center {
+	text-align: center;
+}

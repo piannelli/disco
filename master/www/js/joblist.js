@@ -57,26 +57,34 @@ function start_joblist(){
 }
 
 function update_joblist(jobs){
-    $("#jobs").html($.map(jobs, job_element));
-    filter_jobs($("#joblist input").val());
+    $(".running-jobs").html('<li class="nav-header">Running jobs</li>');
+    $(".running-jobs > li").append($.map(jobs, job_element, 'active'));
+    $(".failed-jobs").html('<li class="nav-header">Failed jobs</li>');
+    $(".failed-jobs > li").append($.map(jobs, job_element, 'dead'));
+    $(".completed-jobs").html('<li class="nav-header">Completed jobs</li>');
+    $(".completed-jobs > li").append($.map(jobs, job_element, 'done'));
+    //filter_jobs($("#joblist input").val());
     setTimeout(function(){
         $.getJSON("/disco/ctrl/joblist", update_joblist);
     }, 10000);
 }
 
-function job_element(job, i){
+function job_element(job, i, status){
     var prio = job[0];        /* [-1.0..1.0] */
     var job_status = job[1];
     var name = job[2];
-
+    if (job_status != status) {
+		return;
+    }
+    
     var sat = (prio + 1.0) / 2.0;
     var rgb = hslToRgb(0.145, 1.0 - sat, 0.5);
 
-    cbox = $.create("div", {"class": "live " + job_status}, []);
-    jbox = $.create("div", {"class": "job"}, [cbox, name]);
-    jbox.onmouseover = job_mouseover;
-    jbox.onmouseout = job_mouseout;
-    jbox.onclick = job_click;
+	ajob = $.create("a", {"href" : "job.html?name=" + name}, [name]);
+    jbox = $.create("li", {"class": "job"}, [ajob]);
+    //jbox.onmouseover = job_mouseover;
+    //jbox.onmouseout = job_mouseout;
+    //jbox.onclick = job_click;
 
     return jbox;
 }

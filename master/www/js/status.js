@@ -1,7 +1,7 @@
 $(document).ready(function(){
-    $.getJSON("/disco/ctrl/nodeinfo", update_nodeboxes);
-    $.getJSON("/ddfs/ctrl/gc_stats", update_gcstats);
-    $.getJSON("/ddfs/ctrl/gc_status", update_gcstatus);
+    $.getJSON("/disco/ctrl/nodeinfo", update_nodes_data);
+    //$.getJSON("/ddfs/ctrl/gc_stats", update_gcstats);
+    //$.getJSON("/ddfs/ctrl/gc_status", update_gcstatus);
 });
 
 function Node(host, info){
@@ -11,33 +11,31 @@ function Node(host, info){
     self.id = host.replace(/\./g, "-");
 
     self.append_to = function(elmt){
-        var jboxes = $.map(Array(self.info.max_workers), function(X, i){
-            return $.create("div", {"class": "jbox", "id": "free"}, []);
-        });
-
         var disconnected = self.info.connected ? "" : " disconnected";
-        var title = $.create("div", {"class": "title" + disconnected}, [host]);
-        var status = $.create("div", {"class": "status", "id": self.id}, jboxes);
         var diskp = 100 * self.info.diskfree / (self.info.diskfree + self.info.diskused);
-        var disk = $.create("div", {"class": "disk"});
-        var diskused = $(disk).append($.create("div", {"class": "disk used",
-                                                       "style": "width: " + diskp + "%"},
-                                               [format_size(self.info.diskfree)]));
-        var val_ok = $.create("div", {"class": "val lval"},
-                              [String(self.info.job_ok)]);
-        var val_data = $.create("div", {"class": "val mval"},
-                                [String(self.info.data_error)]);
-        var val_err = $.create("div", {"class": "val rval"},
-                               [String(self.info.error)]);
+        var title = $.create("h5", {"class": " " + disconnected}, [host]);
+        var jboxes = $.map(Array(self.info.max_workers), function(X, i){
+            return $.create("div", {"class": "label", "id": "free"}, [""]);
+        });
+        jboxes = $.create("div", {"class":"workers", "id": self.id}, jboxes);
+        var disk = $.create("ul", {"class": "nav nav-list clearfix"});        
+        $(disk).append($.create("li", {"class": "divider"}));
+        var diskused = $(disk).append($.create("li", {"class":"center"},
+                                               [format_size(self.info.diskused) + " / " + format_size(self.info.diskfree)]));
+                                               
         var blacklisted = self.info.blacklisted ? "blacklisted" : "";
-
-        elmt.append($.create("div", {"class": "nodebox " + blacklisted},
-                             [title, status, disk, val_ok, val_data, val_err]));
+		var blacklistedDisco = $.create("span", {"class": "blacklisted-disco label label-" + ((blacklisted) ? "important" : "success")}, ["Disco"]);
+		var blacklistedDDFS = $.create("span", {"class": "blacklisted-ddfs label label-" + ((blacklisted) ? "important" : "success")}, ["DDFS"]);
+		var blacklist = $.create("li", {"class":"center"}, [blacklistedDisco, blacklistedDDFS]);
+		$(disk).append(blacklist);
+        elmt.append($.create("div", {"class": "span2 well host " + blacklisted},
+                             [title, jboxes, disk]));
+                           
         $.map(self.info.tasks || [], self.show_task);
     }
 
     self.show_task = function(task){
-        $(".status#" + self.id + " > .jbox#free:first")
+        $(".workers#" + self.id + " > .label#free:first")
             .attr("id", "")
             .addClass("busy")
             .addClass("_job_" + task.replace("@", "_").split(":").join(""))
@@ -47,18 +45,48 @@ function Node(host, info){
     }
 }
 
-function update_nodeboxes(data){
+function update_nodes_data(data){
     $("#nodes").empty();
     var hosts = [];
+    var totalHosts = 0;
+    var activeHosts = 0;
+    var totalWorkers = 0;
+    var activeWorkers = 0;
+    var usedDiskSpace = 0;
+    var freeDiskSpace = 0;
+    var totalDiskSpace = 0;
     for (host in data)
         hosts.push(host);
     hosts.sort();
+    totalHosts = hosts.length;
     $.each(hosts, function(i, host){
         new Node(host, data[host]).append_to($("#nodes"));
+        totalWorkers += data[host].max_workers;
+        if (data[host].connected == true) {
+        	activeHosts++;
+            activeWorkers += data[host].max_workers;
+            freeDiskSpace += data[host].diskfree;
+            usedDiskSpace += data[host].diskused;
+        }
     });
+    
+    totalDiskSpace = freeDiskSpace + usedDiskSpace;
+    freeDiskSpacePercentage = Math.round((freeDiskSpace * 100) / totalDiskSpace, 2);
+    usedDiskSpacePercentage = Math.round((usedDiskSpace * 100) / totalDiskSpace, 2);
 
+    $('#hosts_active_count').html(activeHosts);
+    $('#hosts_total_count').html(totalHosts);
+	$('#workers_active_count').html(activeWorkers);
+	$('#workers_total_count').html(totalWorkers);
+	$('#disk_used_count').html(format_size(usedDiskSpace));
+	$('#disk_free_count').html(format_size(freeDiskSpace));
+	if (usedDiskSpace != 'NaN') {
+		$('#disk_used_percentage').html(usedDiskSpacePercentage);
+		$('#disk_free_percentage').html(freeDiskSpacePercentage);
+	}
+	
     setTimeout(function(){
-        $.getJSON("/disco/ctrl/nodeinfo", update_nodeboxes);
+        $.getJSON("/disco/ctrl/nodeinfo", update_nodes_data);
     }, 10000);
 }
 
