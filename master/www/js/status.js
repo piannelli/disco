@@ -83,6 +83,8 @@ function update_nodes_data(data){
 	if (usedDiskSpace != 'NaN') {
 		$('#disk_used_percentage').html(usedDiskSpacePercentage);
 		$('#disk_free_percentage').html(freeDiskSpacePercentage);
+		$('#disk_used_percentage').parent('div').css('width', usedDiskSpacePercentage + '%');
+		$('#disk_free_percentage').parent('div').css('width', freeDiskSpacePercentage + '%');
 	}
 	
     setTimeout(function(){
