@@ -80,7 +80,7 @@ function update_nodes_data(data){
 	$('#workers_total_count').html(totalWorkers);
 	$('#disk_used_count').html(format_size(usedDiskSpace));
 	$('#disk_free_count').html(format_size(freeDiskSpace));
-	if (usedDiskSpace != 'NaN') {
+	if (usedDiskSpace) {
 		$('#disk_used_percentage').html(usedDiskSpacePercentage);
 		$('#disk_free_percentage').html(freeDiskSpacePercentage);
 		$('#disk_used_percentage').parent('div').css('width', usedDiskSpacePercentage + '%');
