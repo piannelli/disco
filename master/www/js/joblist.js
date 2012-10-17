@@ -57,16 +57,21 @@ function start_joblist(){
 }
 
 function update_joblist(jobs){
-    $(".running-jobs").html('<li class="nav-header">Running jobs</li>');
-    $(".running-jobs > li").append($.map(jobs, job_element, 'active'));
-    $(".failed-jobs").html('<li class="nav-header">Failed jobs</li>');
-    $(".failed-jobs > li").append($.map(jobs, job_element, 'dead'));
-    $(".completed-jobs").html('<li class="nav-header">Completed jobs</li>');
-    $(".completed-jobs > li").append($.map(jobs, job_element, 'ready'));
+	update_joblist_type(jobs, 'active', 'Running');
+	update_joblist_type(jobs, 'dead',   'Failed');
+	update_joblist_type(jobs, 'ready',  'Completed');
+	
     //filter_jobs($("#joblist input").val());
     setTimeout(function(){
         $.getJSON("/disco/ctrl/joblist", update_joblist);
     }, 10000);
+}
+
+function update_joblist_type(jobs, type, label){
+	var jobs = $.map(jobs, job_element, type);
+	classType = label.toLowerCase();
+    $("." + classType + "-jobs").html('<li class="nav-header">'+ (jobs.length ? '' : 'No ') + label +' jobs</li>');
+	$("." + classType + "-jobs > li").append(jobs);
 }
 
 function job_element(job, i, status){
