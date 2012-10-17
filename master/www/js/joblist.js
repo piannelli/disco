@@ -62,7 +62,7 @@ function update_joblist(jobs){
     $(".failed-jobs").html('<li class="nav-header">Failed jobs</li>');
     $(".failed-jobs > li").append($.map(jobs, job_element, 'dead'));
     $(".completed-jobs").html('<li class="nav-header">Completed jobs</li>');
-    $(".completed-jobs > li").append($.map(jobs, job_element, 'done'));
+    $(".completed-jobs > li").append($.map(jobs, job_element, 'ready'));
     //filter_jobs($("#joblist input").val());
     setTimeout(function(){
         $.getJSON("/disco/ctrl/joblist", update_joblist);
@@ -73,6 +73,7 @@ function job_element(job, i, status){
     var prio = job[0];        /* [-1.0..1.0] */
     var job_status = job[1];
     var name = job[2];
+
     if (job_status != status) {
 		return;
     }
