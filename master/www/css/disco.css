@@ -92,3 +92,7 @@ footer p {
 .center {
 	text-align: center;
 }
+
+li.job {
+	text-transform: none;
+}
