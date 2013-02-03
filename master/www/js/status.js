@@ -5,7 +5,7 @@ $(document).ready(function(){
 });
 
 function Node(host, info){
-    self = this; /* cant actually use 'this' in methods since jquery binds it */
+    var self = this; /* cant actually use 'this' in methods since jquery binds it */
     self.host = host;
     self.info = info;
     self.id = host.replace(/\./g, "-");
@@ -35,13 +35,13 @@ function Node(host, info){
     }
 
     self.show_task = function(task){
-        $(".workers#" + self.id + " > .label#free:first")
-            .attr("id", "")
-            .addClass("busy")
-            .addClass("_job_" + task.replace("@", "_").split(":").join(""))
-            .click(function(){
-                $("#joblist input").val(task);
-            });
+    $(".workers#" + self.id + " > .label#free:first")
+       .attr("id", "")
+       .addClass("busy")
+        .addClass("_job_" + task.replace("@", "_").split(":").join(""))
+        .click(function(){
+            $("#joblist input").val(task);
+        });
     }
 }
 
@@ -55,28 +55,43 @@ function update_nodes_data(data){
     var usedDiskSpace = 0;
     var freeDiskSpace = 0;
     var totalDiskSpace = 0;
-    for (host in data)
-        hosts.push(host);
+    for (host in data) {
+        if (page == 'jobs')
+        {
+            if (data[host].tasks != undefined && data[host].tasks.length > 0)
+            {
+                hosts.push(host);
+            }
+        } else {
+            hosts.push(host);
+        }
+    }
     hosts.sort();
     totalHosts = hosts.length;
-    $.each(hosts, function(i, host){
-        new Node(host, data[host]).append_to($("#nodes"));
-        totalWorkers += data[host].max_workers;
-        if (data[host].connected == true) {
+
+    if (!hosts.length && page == 'jobs') {
+        $("#nodes").html('<p class="alert alert-info">There aren\'t any workers processing this job at the moment.</p>');
+    } else if (!hosts.length && page != 'jobs') {
+        $("#nodes").html('<p class="alert alert-info">There aren\'t any workers configured. Please add them from the Configuration page.</p>');
+    } else {
+        $.each(hosts, function(i, host){
+            new Node(host, data[host]).append_to($("#nodes"));
+            totalWorkers += data[host].max_workers;
+            if (data[host].connected == true) {
         	activeHosts++;
-            activeWorkers += data[host].max_workers;
-            freeDiskSpace += data[host].diskfree;
-            usedDiskSpace += data[host].diskused;
-        }
-    });
-    
+                activeWorkers += data[host].max_workers;
+                freeDiskSpace += data[host].diskfree;
+                usedDiskSpace += data[host].diskused;
+            }
+        });
+    }
     totalDiskSpace = freeDiskSpace + usedDiskSpace;
     freeDiskSpacePercentage = Math.round((freeDiskSpace * 100) / totalDiskSpace, 2);
     usedDiskSpacePercentage = Math.round((usedDiskSpace * 100) / totalDiskSpace, 2);
 
-    $('#hosts_active_count').html(activeHosts);
+    $('#hosts_available_count').html(activeHosts);
     $('#hosts_total_count').html(totalHosts);
-	$('#workers_active_count').html(activeWorkers);
+	$('#workers_available_count').html(activeWorkers);
 	$('#workers_total_count').html(totalWorkers);
 	$('#disk_used_count').html(format_size(usedDiskSpace));
 	$('#disk_free_count').html(format_size(freeDiskSpace));

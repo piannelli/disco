@@ -1,31 +1,195 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
-          "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <title>disco job</title>
-    <link rel="stylesheet" href="/css/reset-fonts-grids.css" type="text/css">
-    <link rel="stylesheet" href="/css/style.css" type="text/css">
+    <meta charset="utf-8">
+    <title>Bootstrap, from Twitter</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-    <script type="text/javascript" src="/js/jquery-1.2.1.js"></script>
-    <script type="text/javascript" src="/js/jquery-dom.js"></script>
-    <script type="text/javascript" src="/js/typewatch1.1.js"></script>
-    <script type="text/javascript" src="/js/json2.js"></script>
+    <!-- Le styles -->
+    <link href="/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="/css/disco.css" rel="stylesheet">
+    
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
 
-    <script type="text/javascript" src="/js/joblist.js"></script>
-    <script type="text/javascript" src="/js/disco.js"></script>
-    <script type="text/javascript" src="/js/job.js"></script>
+    <!-- Le fav and touch icons -->
+    <link rel="shortcut icon" href="/bootstrap/ico/favicon.ico">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/bootstrap/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/bootstrap/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/bootstrap/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="/bootstrap/ico/apple-touch-icon-57-precomposed.png">
   </head>
-  <body>
-    <div id="doc3" class="yui-t5">
 
-      <div id="hd">
-        <div id="title">
-          <span class="">job:</span>
-        </div>
-        <div id="logo">
-          <img src="/images/balls.png"/>
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="#">Disco Project</a>
+          <div class="nav-collapse collapse">
+            <p class="navbar-text pull-right">
+              <small>version <a href="#" class="navbar-link"><span id="version"></span></a>
+            </p>
+            <ul class="nav">
+              <li><a href="/">Home</a></li>
+              <li class="active"><a href="#">Jobs</a></li>
+              <li><a href="#ddfs">DDFS</a></li>
+              <li><a href="/config.html">Hosts</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
         </div>
       </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="span9">
+          <div class="hero-unit">
+          	<div id="disco_busy">
+              <h1>Disco is processing data</h1>
+              <p>Select a job from the sidebar to get more details.</p>
+      			</div>
+            <div id="disco_no_jobs">
+              <h1>Disco is idle</h1>
+              <p>There are currently no jobs being processed.</p>
+              <p></p>
+              <p id="select_a_job">Select a job from the sidebar to get more details.</p>
+            </div>
+            <div id="disco_job_details" class="hidden">
+              <h2 id="job_name"></h2>
+              <div class="row">
+                <div class="span2">
+                  <p>Started by</p>
+                </div>
+                <div class="offset1">
+                  <p><span id="job_started_by"></span> at <span id="job_started_at"></span></p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="span2">
+                  <p>Map phase</p>
+                </div>
+                <div class="offset1">
+                  <p>
+                  <span class="muted hidden"><span id="job_map_waiting"></span> Waiting </span>
+                  <span class="text-warning hidden"><span id="job_map_running" ></span> Running </span>
+                  <span class="text-success hidden"><span id="job_map_done"></span> Done </span>
+                  <span class="text-error hidden"><span id="job_map_failed"></span> Failed </span>
+                </p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="span2">
+                  <p>Reduce phase</p>
+                </div>
+                <div class="offset1">
+                  <p>
+                  <span class="muted hidden"><span id="job_reduce_waiting"></span> Waiting </span>
+                  <span class="text-warning hidden"><span id="job_reduce_running" ></span> Running </span>
+                  <span class="text-success hidden"><span id="job_reduce_done"></span> Done </span>
+                  <span class="text-error hidden"><span id="job_reduce_failed"></span> Failed </span>
+                </p>
+                </div>
+              </div>      <div class="row">
+        <div class="span2">
+          <p>Current Status</p>
+        </div>
+        <div class="offset0">
+              <span id="job_status"></span>
+        </div>
+      </div>        
+                <div class="row pull-right" id="job_buttons">
+                <div class="span3 text-right">
+                  <a class="btn btn-danger btn-large hidden" id="kill_job">
+                      Kill
+                  </a>
+                  <a class="btn btn-danger btn-large" id="purge_job">
+                      Delete Job Data
+                  </a>
+                </div>
+              </div>
+              </div>
+          </div>
+              <ul class="nav nav-tabs">
+                  <li class="">
+                      <a href="#nodes" data-toggle="tab">Hosts</a>
+                  </li>
+                  <li class="active">
+                      <a href="#events" data-toggle="tab">Messages</a>
+                  </li>
+                  <li>
+                      <a href="#map_inputs" data-toggle="tab">Map Inputs</a>
+                  </li>
+                  <li>
+                      <a href="#results" data-toggle="tab">Results</a>
+                  </li>
+             </ul>
+             <div class="tab-content">
+                 <div class="tab-pane" id="nodes"><p class="alert alert-info">There aren't any workers processing this job at this moment</p></div>
+                 <div class="tab-pane active events" id="events"></div>
+                 <div class="tab-pane map-inputs alert alert-info" id="map_inputs"></div>
+                 <div class="tab-pane results" id="results"><p class="alert alert-info">No results available.</p></div>
+             </div>
+        </div>
+        <div class="span3" >
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list running-jobs">
+              <li class="nav-header"><span id="no_running_jobs">No </span>Running jobs</li>
+        	</ul>
+          </div>
+        </div>
+        <div class="span3">
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list failed-jobs">
+              <li class="nav-header"><span id="no_failed_jobs">No </span>Failed jobs</li>
+        	</ul>
+          </div>
+        </div>
+        <div class="span3">
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list completed-jobs">
+              <li class="nav-header"><span id="no_completed_jobs">No </span>Completed jobs</li>
+        	</ul>
+          </div>
+        </div>
+          </div><!--/.well -->
+        </div><!--/span-->
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+        <p class="pull-right">Follow this project at <a href="http://www.discoproject.org">http://www.discoproject.org</a> or on <a href="https://github.com/discoproject">GitHub</a></p>
+      </footer>
+
+    </div><!--/.container-->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script>page = 'jobs'</script>
+    <script src="/bootstrap/js/jquery.js"></script>
+    <script src="/bootstrap/js/bootstrap.js"></script>
+    <script type="text/javascript" src="/js/jquery-dom.js"></script>
+    <script type="text/javascript" src="/js/typewatch1.1.js"></script>
+    <script src="/js/disco.js"></script>
+    <script src="/js/status.js"></script>
+    <script src="/js/joblist.js"></script>
+    <script src="/js/job.js"></script>
+
+
+  </body>
+</html>
 
       <div id="bd">
 	<div id="yui-main">

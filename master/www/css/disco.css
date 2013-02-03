@@ -96,3 +96,23 @@ footer p {
 li.job {
 	text-transform: none;
 }
+
+div.busy {
+	background-color: green;
+}
+
+#disco_busy {
+	display: none;
+}
+
+#select_a_job {
+	display: none;
+}
+
+.text-right {
+	text-align: right;
+}
+
+.event .tstamp-node { float: left; margin: 10px 0 10px 0 }
+.event .text { clear: both }
+.event .text { border: 0px solid #ccc; margin: 5px; line-height: 20px; }
